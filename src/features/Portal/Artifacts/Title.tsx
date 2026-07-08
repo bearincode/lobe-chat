@@ -1,5 +1,6 @@
 import { ArtifactType } from '@lobechat/types';
-import { ActionIcon, Flexbox, Icon, Segmented, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui/base-ui';
 import { ConfigProvider } from 'antd';
 import { cx } from 'antd-style';
 import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
@@ -16,12 +17,13 @@ const Title = () => {
   const [displayMode, artifactType, artifactTitle, isArtifactTagClosed, closeArtifact] =
     useChatStore((s) => {
       const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+      const identifier = chatPortalSelectors.artifactIdentifier(s);
 
       return [
         s.portalArtifactDisplayMode,
         chatPortalSelectors.artifactType(s),
         chatPortalSelectors.artifactTitle(s),
-        chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+        chatPortalSelectors.isArtifactTagClosed(messageId, identifier)(s),
         s.closeArtifact,
       ];
     });
@@ -47,23 +49,23 @@ const Title = () => {
         }}
       >
         {showSwitch && (
-          <Segmented
+          <Tabs
+            activeKey={displayMode}
             size={'small'}
-            value={displayMode}
-            options={[
+            items={[
               {
                 icon: <Icon icon={EyeIcon} />,
+                key: ArtifactDisplayMode.Preview,
                 label: t('artifacts.display.preview'),
-                value: ArtifactDisplayMode.Preview,
               },
               {
                 icon: <Icon icon={CodeIcon} />,
+                key: ArtifactDisplayMode.Code,
                 label: t('artifacts.display.code'),
-                value: ArtifactDisplayMode.Code,
               },
             ]}
-            onChange={(value) => {
-              useChatStore.setState({ portalArtifactDisplayMode: value as ArtifactDisplayMode });
+            onChange={(key) => {
+              useChatStore.setState({ portalArtifactDisplayMode: key as ArtifactDisplayMode });
             }}
           />
         )}

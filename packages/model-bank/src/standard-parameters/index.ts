@@ -64,7 +64,7 @@ export const ModelParamsMetaSchema = z.object({
 
   imageUrl: z
     .object({
-      default: z.string().nullable().optional(),
+      default: z.string().nullish(),
       description: z.string().optional(),
       maxFileSize: z.number().optional(),
       type: z.tuple([z.literal('string'), z.literal('null')]).optional(),
@@ -199,6 +199,31 @@ export const ModelParamsMetaSchema = z.object({
       description: z.string().optional(),
       enum: z.array(z.string()),
       type: z.literal('string').optional(),
+    })
+    .optional(),
+
+  promptExtend: z
+    .object({
+      default: z.union([z.boolean(), z.string()]),
+      description: z.string().optional(),
+      enum: z.array(z.string()).optional(),
+      type: z.union([z.literal('boolean'), z.literal('string')]).optional(),
+    })
+    .optional(),
+
+  watermark: z
+    .object({
+      default: z.boolean().default(false),
+      description: z.string().optional(),
+      type: z.literal('boolean').optional(),
+    })
+    .optional(),
+
+  webSearch: z
+    .object({
+      default: z.boolean().default(true),
+      description: z.string().optional(),
+      type: z.literal('boolean').optional(),
     })
     .optional(),
 
